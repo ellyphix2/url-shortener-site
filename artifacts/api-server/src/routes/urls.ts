@@ -1,4 +1,4 @@
-import { Router, type IRouter, type Request, type Response } from "express";
+import { Router } from "express";
 import {
   CreateUrlBody,
   CreateUrlResponse,
@@ -9,16 +9,17 @@ import { prisma } from "../lib/prisma.js";
 import { createRateLimiter } from "../lib/rate-limit.js";
 import { createWithUniqueCode } from "../lib/short-code.js";
 import { normalizeUrl } from "../lib/url-validation.js";
+import { logger } from "../lib/logger.js";
 
-const router: IRouter = Router();
+const router = Router();
 const allowCreation = createRateLimiter(10, 60 * 60 * 1000);
 
-function safeError(req: Request, res: Response, error: unknown): void {
-  req.log.error({ err: error }, "URL database operation failed");
+function safeError(_req: any, res: any, error: unknown): void {
+  logger.error({ err: error }, "URL database operation failed");
   res.status(500).json({ error: "Something went wrong. Please try again later." });
 }
 
-router.post("/urls", async (req, res): Promise<void> => {
+router.post("/urls", async (req: any, res: any): Promise<void> => {
   if (!allowCreation(req.ip ?? "unknown")) {
     res.status(429).json({ error: "You've reached the hourly limit. Please try again later." });
     return;
@@ -50,7 +51,7 @@ router.post("/urls", async (req, res): Promise<void> => {
   }
 });
 
-async function findUrl(req: Request, res: Response, redirect: boolean): Promise<void> {
+async function findUrl(req: any, res: any, redirect: boolean): Promise<void> {
   const params = GetUrlParams.safeParse(req.params);
   if (!params.success) {
     res.status(404).send(redirect ? "Short URL not found." : { error: "Short URL not found." });
@@ -72,8 +73,8 @@ async function findUrl(req: Request, res: Response, redirect: boolean): Promise<
   }
 }
 
-router.get("/urls/:shortCode", async (req, res): Promise<void> => findUrl(req, res, false));
-export const redirectRouter: IRouter = Router();
-redirectRouter.get("/:shortCode", async (req, res): Promise<void> => findUrl(req, res, true));
+router.get("/urls/:shortCode", async (req: any, res: any): Promise<void> => findUrl(req, res, false));
+export const redirectRouter = Router();
+redirectRouter.get("/:shortCode", async (req: any, res: any): Promise<void> => findUrl(req, res, true));
 
 export default router;
