@@ -1,10 +1,10 @@
-import express, { type Express } from "express";
-import pinoHttp from "pino-http";
-import router from "./routes";
-import { redirectRouter } from "./routes/urls";
-import { logger } from "./lib/logger";
+import express from "express";
+import { pinoHttp } from "pino-http";
+import router from "./routes/index.js";
+import { redirectRouter } from "./routes/urls.js";
+import { logger } from "./lib/logger.js";
 
-const app: Express = express();
+const app = express();
 // Trust the single reverse-proxy hop in front of this server when reading client IPs.
 app.set("trust proxy", 1);
 

@@ -5,10 +5,10 @@ import {
   GetUrlParams,
   GetUrlResponse,
 } from "@workspace/api-zod";
-import { prisma } from "../lib/prisma";
-import { createRateLimiter } from "../lib/rate-limit";
-import { createWithUniqueCode } from "../lib/short-code";
-import { normalizeUrl } from "../lib/url-validation";
+import { prisma } from "../lib/prisma.js";
+import { createRateLimiter } from "../lib/rate-limit.js";
+import { createWithUniqueCode } from "../lib/short-code.js";
+import { normalizeUrl } from "../lib/url-validation.js";
 
 const router: IRouter = Router();
 const allowCreation = createRateLimiter(10, 60 * 60 * 1000);

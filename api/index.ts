@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import app from "../artifacts/api-server/src/app";
+import app from "../artifacts/api-server/src/app.js";
 
 // An Express app is a callable request listener at runtime, but the `Express`
 // interface only exposes that call signature through the `Application`

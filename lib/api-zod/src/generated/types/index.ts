@@ -6,7 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export * from './healthStatus';
-export * from './resolvedUrl';
-export * from './shortUrl';
-export * from './urlInput';
+export * from './healthStatus.js';
+export * from './resolvedUrl.js';
+export * from './shortUrl.js';
+export * from './urlInput.js';
