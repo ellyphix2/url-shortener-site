@@ -33,15 +33,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api", router);
 app.use(redirectRouter);
 
-app.use((error: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
+app.use((error: unknown, _req: unknown, response: unknown, _next: unknown) => {
+  const res = response as {
+    statusCode: number;
+    setHeader(name: string, value: string): void;
+    end(body: string): void;
+  };
+
   if (error instanceof SyntaxError && "body" in error) {
     res.statusCode = 400;
-    res.json({ error: "Invalid JSON request body." });
+    res.setHeader("content-type", "application/json; charset=utf-8");
+    res.end(JSON.stringify({ error: "Invalid JSON request body." }));
     return;
   }
   logger.error({ err: error }, "Unhandled request error");
   res.statusCode = 500;
-  res.json({ error: "Something went wrong. Please try again later." });
+  res.setHeader("content-type", "application/json; charset=utf-8");
+  res.end(JSON.stringify({ error: "Something went wrong. Please try again later." }));
 });
 
 export default app;
