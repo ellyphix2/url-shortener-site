@@ -35,11 +35,13 @@ app.use(redirectRouter);
 
 app.use((error: unknown, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   if (error instanceof SyntaxError && "body" in error) {
-    res.status(400).json({ error: "Invalid JSON request body." });
+    res.statusCode = 400;
+    res.json({ error: "Invalid JSON request body." });
     return;
   }
-  req.log.error({ err: error }, "Unhandled request error");
-  res.status(500).json({ error: "Something went wrong. Please try again later." });
+  logger.error({ err: error }, "Unhandled request error");
+  res.statusCode = 500;
+  res.json({ error: "Something went wrong. Please try again later." });
 });
 
 export default app;
